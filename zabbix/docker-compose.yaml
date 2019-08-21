@@ -1,6 +1,6 @@
 version: '3'
 services:
-  zabbix-server:
+  zabbix_server:
     image: zabbix/zabbix-server-mysql:alpine-4.0-latest
     ports:
       - "10051:10051"
@@ -14,11 +14,11 @@ services:
       - MYSQL_PASSWORD=${DB_USER_PASSWORD}
       - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
       - ZBX_DEBUGLEVEL=${LOG_LEVEL}
-    user: root
-    networks:
-      - zbx_net
+    links:
+      - zabbix_db
 
-  zabbix-web-apache-mysql:
+
+  zabbix_web_apache_mysql:
     image: zabbix/zabbix-web-apache-mysql:alpine-4.0-latest
     ports:
       - "80:80"
@@ -32,11 +32,12 @@ services:
       - MYSQL_PASSWORD=${DB_USER_PASSWORD}
       - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
       - PHP_TZ=${TIME_ZONE}
-    user: root
-    networks:
-      - zbx_net
+    links:
+      - zabbix_server
+      - zabbix_db
 
-  zabbix-agent:
+
+  zabbix_agent:
     image: zabbix/zabbix-agent:alpine-4.0-latest
     ports:
       - "10050:10050"
@@ -44,14 +45,11 @@ services:
       - /etc/localtime:/etc/localtime:ro
     environment:
       - ZBX_SERVER_HOST=zabbix_server
-    user: root
     privileged: true
-    pid: "host"
-    networks:
-      zbx_net:
-        ipv4_address: 10.0.1.5
+    links:
+      - zabbix_server
 
-  mysql-server:
+  zabbix_db:
     image: mysql:5.7
     volumes:
       - /etc/localtime:/etc/localtime:ro
@@ -61,17 +59,3 @@ services:
       - MYSQL_USER=${DB_USER}
       - MYSQL_PASSWORD=${DB_USER_PASSWORD}
       - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
-    user: root
-    networks:
-      - zbx_net
-
-networks:
-  zbx_net:
-    driver: bridge
-    driver_opts:
-      com.docker.network.enable_ipv6: "false"
-    ipam:
-      driver: default
-      config:
-        - subnet: 10.0.1.0/24
-
