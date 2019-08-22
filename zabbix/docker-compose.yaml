@@ -21,7 +21,7 @@ services:
   zabbix_web_apache_mysql:
     image: zabbix/zabbix-web-apache-mysql:alpine-4.0-latest
     ports:
-      - "80:80"
+      - "81:80"
     volumes:
       - /etc/localtime:/etc/localtime:ro
     environment:
@@ -50,7 +50,7 @@ services:
       - zabbix_server
 
   zabbix_db:
-    image: mysql:5.7
+    image: mariadb:10.4.7
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ./zbx_env/var/lib/mysql:/var/lib/mysql
