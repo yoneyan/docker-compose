@@ -17,7 +17,7 @@ services:
     container_name: grafana
     environment:
       GF_INSTALL_PLUGINS: alexanderzobnin-zabbix-app,grafana-piechart-panel
-      GF_SERVER_ROOT_URL: http://log.yoneyan.net/grafana/
+      GF_SERVER_ROOT_URL: http://yourdomain/grafana/
       GF_SECURITY_ADMIN_USER: user 
       GF_SECURITY_ADMIN_PASSWORD: password
       VIRTUAL_HOST: log.yoneyan.net/grafana
