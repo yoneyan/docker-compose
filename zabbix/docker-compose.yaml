@@ -16,6 +16,7 @@ services:
       - ZBX_DEBUGLEVEL=${LOG_LEVEL}
     links:
       - zabbix_db
+    restart: always
 
 
   zabbix_web_apache_mysql:
@@ -35,6 +36,7 @@ services:
     links:
       - zabbix_server
       - zabbix_db
+    restart: always
 
 
   zabbix_agent:
@@ -48,6 +50,7 @@ services:
     privileged: true
     links:
       - zabbix_server
+    restart: always
 
   zabbix_db:
     image: mariadb:10.4.7
@@ -59,3 +62,4 @@ services:
       - MYSQL_USER=${DB_USER}
       - MYSQL_PASSWORD=${DB_USER_PASSWORD}
       - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+    restart: always
