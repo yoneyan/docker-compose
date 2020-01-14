@@ -3,11 +3,13 @@ services:
     fluentd:
         build: ./dockerfile/fluentd
         expose:
-            - 5140
+            - 5140/udp
+            - 2056/udp
         ports:
-            - 5140:5140
+            - 5140:5140/udp
             - 24224:24224
-            - 2056:2056
+            - 2056:2056/udp
+            - 6343:6343
         environment:
             - 'FLUENTD_CONF=fluentd.conf'
         volumes:
@@ -22,8 +24,8 @@ services:
         environment:
             - discovery.type=single-node
             - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-        volumes:
-            - data:/usr/share/elasticsearch/data
+              #        volumes:
+              #- data:/usr/share/elasticsearch/data
         depends_on:
             - fluentd
 
