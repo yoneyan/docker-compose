@@ -12,4 +12,5 @@ RUN sudo gem sources --clear-all
 RUN apk del .build
 RUN rm -rf /tmp/* /var/tmp/* /usr/lib/ruby/gems/*/cache/*.gem
 
+COPY entrypoint.sh /bin/
 USER fluent
