@@ -8,5 +8,5 @@ Grafanaの永続用データ(./grafana)が保存されるが、権限を777に�
 |service|status|
 |---|---|
 |zabbix|worked|
-|grafana|not worked|
+|grafana|worked|
 |kibana|worked|
