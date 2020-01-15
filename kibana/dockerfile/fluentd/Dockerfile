@@ -1,18 +1,41 @@
-FROM fluent/fluentd:v1.7-1
+FROM alpine:3.9
 
-USER root
+RUN apk update \
+ && apk add --no-cache \
+        ca-certificates \
+        ruby ruby-irb ruby-etc ruby-webrick \
+        tini geoip\
+ && apk add --no-cache --virtual .build-deps \
+        build-base linux-headers \
+        ruby-dev gnupg \
+        make gcc g++ libc-dev \
+        wget bzip2 zlib-dev git \
+        automake autoconf libtool \
+        libc6-compat geoip-dev \
+ && echo 'gem: --no-document' >> /etc/gemrc \
+ && gem install oj -v 3.8.1 \
+ && gem install json -v 2.2.0 \
+ && gem install async-http -v 0.49.1 \
+ && gem install fluentd -v 1.8.1 \
+ && gem install bigdecimal -v 1.4.4 \
+ && gem install fluent-plugin-elasticsearch \
+ && gem install fluent-plugin-geoip \
+ && gem install fluent-plugin-netflow \
+ && gem install fluent-plugin-flowcounter \
+ && apk del .build-deps \
+ && rm -rf /tmp/* /var/tmp/* /usr/lib/ruby/gems/*/cache/*.gem
 
-RUN apk add --update sudo ruby-dev geoip
-RUN apk add --update --virtual .build make gcc g++ libc-dev wget bzip2 zlib-dev git linux-headers automake autoconf libtool build-base ruby-dev libc6-compat geoip-dev 
-RUN sudo gem install fluent-plugin-elasticsearch
-RUN sudo gem install fluent-plugin-geoip
-RUN sudo gem install fluent-plugin-netflow
-RUN sudo gem install fluent-plugin-flowcounter
-RUN sudo gem sources --clear-all
-RUN apk del .build
-RUN rm -rf /tmp/* /var/tmp/* /usr/lib/ruby/gems/*/cache/*.gem
+
+RUN addgroup -S fluent && adduser -S -g fluent fluent \
+    && mkdir -p /fluentd/log \
+    && mkdir -p /fluentd/etc /fluentd/plugins \
+    && chown -R fluent /fluentd && chgrp -R fluent /fluentd
 
 COPY entrypoint.sh /bin/
 
+ENV LD_PRELOAD=""
+EXPOSE 24224 5140
+
 USER fluent
 ENTRYPOINT ["tini",  "--", "/bin/entrypoint.sh"]
+CMD ["fluentd"]
