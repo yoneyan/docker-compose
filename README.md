@@ -1,3 +1,4 @@
+![fluentd-dockerimage](https://github.com/yoneyan/docker-logserver/workflows/fluentd-dockerimage/badge.svg "fluentd-dockerimage")
 # docker-compose
 docker_composeで作ったもの
 
