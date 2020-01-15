@@ -31,6 +31,7 @@ RUN addgroup -S fluent && adduser -S -g fluent fluent \
     && mkdir -p /fluentd/etc /fluentd/plugins \
     && chown -R fluent /fluentd && chgrp -R fluent /fluentd
 
+COPY fluent.conf /fluentd/etc/
 COPY entrypoint.sh /bin/
 
 ENV LD_PRELOAD=""
