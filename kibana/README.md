@@ -1,3 +1,4 @@
+![fluentd-dockerimage](https://github.com/yoneyan/docker-logserver/workflows/fluentd-dockerimage/badge.svg "fluentd-dockerimage")
 # kibana
 ## 前提条件
 docker、docker-composeが導入済みであること
